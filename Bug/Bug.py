@@ -10,7 +10,7 @@ class Bug:
         self.depth = depth
         self.input_file = input_file
         self.output_file = output_file
-        self.https = PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where(),timeout=10.0)  # якась хуйня шоб можна було робити хітровиєбані рекуести)
+        self.https = PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where(),timeout=10.0)  # якась фігня шоб можна було робити хттпс рекуести)
     def xml_input_reader(self, path_to_file):  # чєтаєм входной фаіл
         output = []
         mydoc = minidom.parse(path_to_file)
@@ -22,9 +22,9 @@ class Bug:
     def page_reader(self, url):
         try:
             page = self.https.request('GET', url).data.decode('utf-8')
-            # кароче собираю їбать явні емаіли
+            # кароче собираю явні емаіли
             emails = set(re.findall('([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)', str(page)))
-            # кароче собираю їбать неявні емаіли і об'єдную множини
+            # кароче собираю неявні емаіли і об'єдную множини
             emails = emails | (
             set(re.findall('([a-zA-Z0-9_.+-]+\s?(?:\(at\)|\[at\])\s?[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)', str(page))))
             # сабираю ссилки
@@ -52,9 +52,9 @@ class Bug:
                 visited_urls_dataset.add(url)
                 temp |= (self.page_reader(url)[1] - visited_urls_dataset) - set(temporary_urls_dataset)
             temporary_urls_dataset = set()
-            temporary_urls_dataset |= temp  # це опєрация об'єднання. Я юзаю її, а не =, того шо якшо юзати =, то присвоїть указатєль на присваюємий обьєкт, а це , сама понімаєш хуйня полічіцо
+            temporary_urls_dataset |= temp  # це опєрация об'єднання. Я юзаю її, а не =, того шо якшо юзати =, то присвоїть указатєль на присваюємий обьєкт, а це , сама понімаєш фігня полічіцо
         # тут ми пишем xml-фаіл
-        # кароч тут якісь ахуєвші свєрхтєхнології: https://stackoverflow.com/questions/3605680/creating-a-simple-xml-file-using-python
+        # кароч тут якісь афігєвші свєрхтєхнології: https://stackoverflow.com/questions/3605680/creating-a-simple-xml-file-using-python
         root = ET.Element("root")
         doc = ET.SubElement(root, "doc")
         for email in emails:
